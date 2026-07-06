@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: warehouse
+    schema: main
+    tables:
+      - name: transactions
+      - name: products
+      - name: distributors
+      - name: salespersons
+      - name: monthly_targets
+      - name: date_table
