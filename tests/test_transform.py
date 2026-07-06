@@ -9,7 +9,7 @@ def test_transform_tables_cleans_and_derives_fields():
             [
                 {
                     "transaction_id": " TXN001 ",
-                    "transaction_date": "2025-06-27",
+                    "transaction_date": pd.Timestamp("2025-06-27"),
                     "product_id": " PROD1 ",
                     "distributor_id": " DIST1 ",
                     "salesperson_id": " SP1 ",
@@ -66,6 +66,7 @@ def test_transform_tables_cleans_and_derives_fields():
     tx = transformed["transactions"]
     assert tx["transaction_id"].iloc[0] == "TXN001"
     assert tx["transaction_date"].iloc[0] == pd.Timestamp("2025-06-27")
+    assert pd.api.types.is_datetime64_any_dtype(tx["transaction_date"])
     assert tx["payment_method"].iloc[0] == "cash"
     assert tx["delivery_status"].iloc[0] == "delivered"
     assert tx["transaction_status"].iloc[0] == "completed"

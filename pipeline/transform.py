@@ -26,6 +26,9 @@ def _coerce_numeric_columns(df: pd.DataFrame) -> pd.DataFrame:
         if pd.api.types.is_numeric_dtype(df[column]):
             continue
 
+        if pd.api.types.is_datetime64_any_dtype(df[column]) or pd.api.types.is_timedelta64_dtype(df[column]):
+            continue
+
         converted = pd.to_numeric(df[column], errors="coerce")
         if converted.notna().any():
             df[column] = converted
