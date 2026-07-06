@@ -28,14 +28,27 @@ region_growth as (
         revenue,
         lag(revenue) over (partition by region order by month_num) as prev_revenue
     from monthly_region_revenue
+),
+ranked_region_growth as (
+    select
+        region,
+        month_num,
+        revenue,
+        round(((revenue - prev_revenue) / nullif(prev_revenue, 0)) * 100, 2) as mom_growth_pct,
+        row_number() over (
+            partition by region
+            order by ((revenue - prev_revenue) / nullif(prev_revenue, 0)) desc, month_num desc
+        ) as rn
+    from region_growth
+    where prev_revenue is not null
 )
 select
     region,
     month_num,
     revenue,
-    round(((revenue - prev_revenue) / nullif(prev_revenue, 0)) * 100, 2) as mom_growth_pct
-from region_growth
-where prev_revenue is not null
+    mom_growth_pct
+from ranked_region_growth
+where rn = 1
 order by mom_growth_pct desc
 limit 5;
 

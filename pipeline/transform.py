@@ -98,7 +98,11 @@ def _transform_transactions(df: pd.DataFrame) -> pd.DataFrame:
 
     for column in ["transaction_date", "onboarding_date", "hire_date", "date"]:
         if column in df.columns:
-            df[column] = pd.to_datetime(df[column], errors="coerce")
+            parsed = pd.to_datetime(df[column], errors="coerce")
+            if parsed.notna().any():
+                df[column] = parsed.dt.tz_localize(None) if getattr(parsed.dt, "tz", None) is not None else parsed
+            else:
+                df[column] = parsed
 
     return df
 
@@ -144,7 +148,11 @@ def _transform_dimension_tables(df: pd.DataFrame) -> pd.DataFrame:
 
     for column in ["onboarding_date", "hire_date", "date"]:
         if column in df.columns:
-            df[column] = pd.to_datetime(df[column], errors="coerce")
+            parsed = pd.to_datetime(df[column], errors="coerce")
+            if parsed.notna().any():
+                df[column] = parsed.dt.tz_localize(None) if getattr(parsed.dt, "tz", None) is not None else parsed
+            else:
+                df[column] = parsed
 
     return df
 
