@@ -1,0 +1,10 @@
+.venv/
+.venv-dbt/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.duckdb
+*.db
+*.log
+/tests/

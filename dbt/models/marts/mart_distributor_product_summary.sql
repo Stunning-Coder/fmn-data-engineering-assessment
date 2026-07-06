@@ -1,0 +1,21 @@
+select
+    d.distributor_name as distributor,
+    p.product_name as product,
+    d.region,
+    sum(t.revenue_ngn) as total_revenue,
+    sum(t.quantity) as total_quantity,
+    sum(t.gross_profit_ngn) as gross_profit,
+    avg(t.discount_amount_ngn) as average_discount,
+    count(t.transaction_id) as number_of_transactions
+from {{ ref
+('stg_transactions') }} as t
+left join {{ ref
+('stg_products') }} as p
+    on t.product_id = p.product_id
+left join {{ ref
+('stg_distributors') }} as d
+    on t.distributor_id = d.distributor_id
+group by
+    d.distributor_name,
+    p.product_name,
+    d.region

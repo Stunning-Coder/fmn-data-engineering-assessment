@@ -84,6 +84,18 @@ def _transform_transactions(df: pd.DataFrame) -> pd.DataFrame:
     df = _coerce_numeric_columns(df)
     df = _coerce_boolean_columns(df)
 
+    accepted_value_mapping = {
+        "payment_method": {"cash": "cash", "credit": "credit", "transfer": "transfer"},
+        "delivery_status": {"delivered": "delivered", "in transit": "in_transit", "pending": "pending"},
+        "transaction_status": {"completed": "completed", "pending": "pending", "returned": "returned"},
+    }
+
+    for column, mapping in accepted_value_mapping.items():
+        if column in df.columns:
+            df[column] = df[column].map(
+                lambda value: mapping.get(str(value).strip().lower(), str(value).strip().lower())
+            )
+
     for column in ["transaction_date", "onboarding_date", "hire_date", "date"]:
         if column in df.columns:
             df[column] = pd.to_datetime(df[column], errors="coerce")
