@@ -8,3 +8,12 @@ __pycache__/
 *.db
 *.log
 /tests/
+airflow/logs/
+airflow/.env
+airflow/webserver_config.py
+.data/
+.DS_Store
+*.sqlite3
+*.parquet
+*.csv
+*.xlsx
